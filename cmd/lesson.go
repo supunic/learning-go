@@ -1,17 +1,12 @@
 package main
 
-import "fmt"
-
-// mainより先に呼び出される
-func init() {
-	fmt.Println("Init!")
-}
-
-func buzz() {
-	fmt.Println("Buzz")
-}
+import (
+	"fmt"
+	"os/user"
+	"time"
+)
 
 func main() {
-	buzz()
-	fmt.Println("Hello world!", "test test")
+	fmt.Println("Hello world!", time.Now())
+	fmt.Println(user.Current())
 }
