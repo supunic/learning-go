@@ -2,29 +2,42 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
-func main() {
-	// 100 milli secごとにchanを返す
-	tick := time.Tick(100 * time.Millisecond)
-	// 500 milli sec後にchanを返す
-	boom := time.After(500 * time.Millisecond)
+type Counter struct {
+	v   map[string]int
+	mux sync.Mutex
+}
 
-OuterLoop:
-	for {
-		select {
-		case <-tick: // time.Tickの戻り値chanを受信
-			fmt.Println("tick.")
-		case <-boom: // time.Afterの戻り値chanを受信
-			fmt.Println("BOOM!")
-			break OuterLoop
-		default:
-			// tickもboomもchに入ってなかったときにforが回ってきた場合
-			// 50 milli sec 待ってまたforが始まる
-			fmt.Println("    .")
-			time.Sleep(50 * time.Millisecond)
+func (c *Counter) Inc(key string) {
+	c.mux.Lock()         // メモリの参照するアドレス先をロック
+	defer c.mux.Unlock() // 終わったらロック解除
+	c.v[key]++           // 値を書き換える
+}
+
+func (c *Counter) Value(key string) int {
+	c.mux.Lock()
+	defer c.mux.Unlock()
+	return c.v[key]
+}
+
+func main() {
+	c := Counter{v: make(map[string]int)}
+
+	// 2つのgoroutineがメモリ参照で競合しない
+	go func() {
+		for i := 0; i < 10; i++ {
+			c.Inc("key")
 		}
-	}
-	fmt.Println("OuterLoop broken")
+	}()
+	go func() {
+		for i := 0; i < 10; i++ {
+			c.Inc("key")
+		}
+	}()
+
+	time.Sleep(1 * time.Second)
+	fmt.Println(c, c.Value("key"))
 }
