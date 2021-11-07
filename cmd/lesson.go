@@ -1,25 +1,23 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"os"
-)
+import "fmt"
+
+func thirdPartyConnectDB() {
+	// golangはpanic非推奨
+	// 自分のコードでpanicを起きないようにかけ
+	panic("Unable to connect database!")
+}
+
+func save() {
+	// thirdPartyConnectDB()
+	defer func() {
+		s := recover() // panicをrecoverがキャッチする
+		fmt.Println(s) // 例外メッセージの出力
+	}()
+	thirdPartyConnectDB()
+}
 
 func main() {
-	file, err := os.Open("./lesson.go")
-	if err != nil {
-		log.Fatalln("Error", err)
-	}
-	defer file.Close()
-	data := make([]byte, 100)
-	count, err := file.Read(data)
-	if err != nil {
-		log.Fatalln("Error", err)
-	}
-	fmt.Println(count, string(data))
-
-	if err = os.Chdir("test"); err != nil {
-		log.Fatalln("Error", err)
-	}
+	save()
+	fmt.Println("ok")
 }
