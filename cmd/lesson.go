@@ -3,24 +3,38 @@ package main
 import "fmt"
 
 func main() {
-	n := []int{1, 2, 3, 4, 5, 6}
-	fmt.Println(n)
-	fmt.Println(n[2])   // 3
-	fmt.Println(n[2:4]) // [3, 4]
-	fmt.Println(n[:2])  // [1, 2]
-	fmt.Println(n[2:])  // [3, 4, 5, 6]
+	n := make([]int, 3, 5)
+	fmt.Printf("len=%d cap=%d value=%v\n", len(n), cap(n), n)
+	// -> len=3 cap=5 value=[0 0 0]
 
-	n[2] = 100
-	fmt.Println(n)
+	n = append(n, 0, 0)
+	fmt.Printf("len=%d cap=%d value=%v\n", len(n), cap(n), n)
+	// -> len=5 cap=5 value=[0 0 0 0 0]
 
-	// スライス in スライス
-	var board = [][]int{
-		{0, 1, 2},
-		{3, 4, 5},
-		{6, 7, 8},
+	// capを超えても追加できる
+	n = append(n, 1, 2, 3, 4, 5)
+	fmt.Printf("len=%d cap=%d value=%v\n", len(n), cap(n), n)
+	// -> len=10 cap=10 value=[0 0 0 0 0 1 2 3 4 5]
+
+	a := make([]int, 3)
+	fmt.Printf("len=%d cap=%d value=%v\n", len(a), cap(a), a)
+	// -> len=3 cap=3 value=[0 0 0]
+
+	b := make([]int, 0, 5)
+	fmt.Printf("len=%d cap=%d value=%v\n", len(b), cap(b), b)
+	// -> len=0 cap=5 value=[]
+
+	c := make([]int, 0, 5)
+	for i := 0; i < 5; i++ {
+		c = append(c, i)
+		fmt.Printf("len=%d cap=%d value=%v\n", len(c), cap(c), c)
 	}
-	fmt.Println(board)
+	// -> len=1 cap=5 value=[0]
+	//    len=2 cap=5 value=[0 1]
+	//    len=3 cap=5 value=[0 1 2]
+	//    len=4 cap=5 value=[0 1 2 3]
+	//    len=5 cap=5 value=[0 1 2 3 4]
 
-	n = append(n, 100, 200, 300, 400)
-	fmt.Println(n)
+	fmt.Printf("len=%d cap=%d value=%v\n", len(c), cap(c), c)
+	// -> len=5 cap=5 value=[0 1 2 3 4]
 }
