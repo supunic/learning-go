@@ -3,38 +3,51 @@ package main
 import "fmt"
 
 func main() {
-	n := make([]int, 3, 5)
-	fmt.Printf("len=%d cap=%d value=%v\n", len(n), cap(n), n)
-	// -> len=3 cap=5 value=[0 0 0]
-
-	n = append(n, 0, 0)
-	fmt.Printf("len=%d cap=%d value=%v\n", len(n), cap(n), n)
-	// -> len=5 cap=5 value=[0 0 0 0 0]
-
-	// capを超えても追加できる
-	n = append(n, 1, 2, 3, 4, 5)
-	fmt.Printf("len=%d cap=%d value=%v\n", len(n), cap(n), n)
-	// -> len=10 cap=10 value=[0 0 0 0 0 1 2 3 4 5]
-
-	a := make([]int, 3)
-	fmt.Printf("len=%d cap=%d value=%v\n", len(a), cap(a), a)
-	// -> len=3 cap=3 value=[0 0 0]
-
-	b := make([]int, 0, 5)
-	fmt.Printf("len=%d cap=%d value=%v\n", len(b), cap(b), b)
-	// -> len=0 cap=5 value=[]
-
-	c := make([]int, 0, 5)
-	for i := 0; i < 5; i++ {
-		c = append(c, i)
-		fmt.Printf("len=%d cap=%d value=%v\n", len(c), cap(c), c)
+	m := map[string]int{
+		"apple":  100,
+		"banana": 200,
 	}
-	// -> len=1 cap=5 value=[0]
-	//    len=2 cap=5 value=[0 1]
-	//    len=3 cap=5 value=[0 1 2]
-	//    len=4 cap=5 value=[0 1 2 3]
-	//    len=5 cap=5 value=[0 1 2 3 4]
+	fmt.Println(m)
+	// -> map[apple:100 banana:200]
+	fmt.Println(m["apple"])
+	// -> 100
 
-	fmt.Printf("len=%d cap=%d value=%v\n", len(c), cap(c), c)
-	// -> len=5 cap=5 value=[0 1 2 3 4]
+	m["banana"] = 300
+	fmt.Println(m)
+	// -> map[apple:100 banana:300]
+
+	m["new"] = 500
+	fmt.Println(m)
+	// -> map[apple:100 banana:300 new:500]
+
+	fmt.Println(m["nothing"])
+	// -> 0
+
+	v, ok := m["apple"]
+	fmt.Println(v, ok)
+	// -> 100 true
+
+	v2, ok2 := m["nothing"]
+	fmt.Println(v2, ok2)
+	// -> 0 false
+
+	m2 := make(map[string]int)
+	m2["pc"] = 5000
+	fmt.Println(m2)
+	// -> map[pc:5000]
+
+	/*
+		var m3 map[string]int
+		m3["pc"] = 5000
+		fmt.Println(m3)
+		// -> panic: assignment to entry in nil map
+		//    （メモリを確保していないためエラーになる）
+	*/
+
+	var s []int
+	if s == nil {
+		fmt.Println("Nil")
+	}
+	// -> Nil
+	//    （Nil = メモリを確保していない）
 }
