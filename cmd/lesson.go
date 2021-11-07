@@ -2,41 +2,29 @@ package main
 
 import "fmt"
 
-func by2(num int) string {
-	if num%2 == 0 {
-		return "ok"
-	} else {
-		return "no"
-	}
-}
-
 func main() {
-	result := by2(10)
-	if result == "ok" {
-		fmt.Println("great")
+	for i := 0; i < 10; i++ {
+		if i == 3 {
+			fmt.Println("continue")
+			continue
+		}
+
+		if i > 5 {
+			break
+		}
+		fmt.Println(i)
 	}
 
-	if result2 := by2(10); result2 == "ok" {
-		fmt.Println("great 2")
+	sum := 1
+	for sum < 10 {
+		sum += sum
+		fmt.Println(sum)
 	}
-	//fmt.Println(result2) // 使えない
 
 	/*
-		num := 6
-		if num % 2 == 0 {
-			fmt.Println("by 2")
-		} else if num % 3 == 0 {
-			fmt.Println("by 3")
-		} else {
-			fmt.Println("else")
+		// 無限ループ
+		for {
+			fmt.Println("hello")
 		}
 	*/
-
-	x, y := 10, 11
-	if x == 10 && y == 10 {
-		fmt.Println("&&")
-	}
-	if x == 10 || y == 10 {
-		fmt.Println("||")
-	}
 }
