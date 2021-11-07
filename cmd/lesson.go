@@ -16,8 +16,8 @@ func (v *Vertex) Scale(i int) {
 }
 
 type Vertex3D struct {
-	Vertex // embedded
-	z      int
+	Vertex
+	z int
 }
 
 func (v Vertex3D) Area3D() int {
