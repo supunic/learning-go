@@ -2,22 +2,21 @@ package main
 
 import "fmt"
 
-func thirdPartyConnectDB() {
-	// golangはpanic非推奨
-	// 自分のコードでpanicを起きないようにかけ
-	panic("Unable to connect database!")
-}
-
-func save() {
-	// thirdPartyConnectDB()
-	defer func() {
-		s := recover() // panicをrecoverがキャッチする
-		fmt.Println(s) // 例外メッセージの出力
-	}()
-	thirdPartyConnectDB()
+func one(x *int) {
+	// ポインタxの中身に1を入れている
+	*x = 1
 }
 
 func main() {
-	save()
-	fmt.Println("ok")
+	// ポインタ
+
+	var n = 100
+	one(&n)
+	fmt.Println(n) // 値の表示
+
+	fmt.Println(&n) // 値を入れたメモリのアドレスを表示
+
+	var p = &n // *int intのポインタ型
+	fmt.Println(p)
+	fmt.Println(*p) // ポインタの中身を表示
 }
