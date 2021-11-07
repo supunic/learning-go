@@ -1,21 +1,28 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func main() {
-	//var t, f = true, false
-	t, f := true, false
-	fmt.Printf("%T %v %t\n", t, 1, t)
-	fmt.Printf("%T %v %t\n", f, 0, t)
+	// int -> float
+	var x = 1
+	xx := float64(1)
+	fmt.Printf("%T %v %f\n", x, x, x)
+	fmt.Printf("%T %v %f\n", xx, xx, xx)
 
-	fmt.Println(true && true)
-	fmt.Println(true && false)
-	fmt.Println(false && false)
+	// float -> int
+	var y = 1.2
+	yy := int(y)
+	fmt.Printf("%T %v %d\n", yy, yy, yy)
 
-	fmt.Println(true || true)
-	fmt.Println(true || false)
-	fmt.Println(false || false)
-
-	fmt.Println(!true)
-	fmt.Println(!false)
+	// string -> int
+	var s = "14"
+	//z := int(s) // できない
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		fmt.Println("ERROR")
+	}
+	fmt.Printf("%T %v %d\n", i, i, i)
 }
