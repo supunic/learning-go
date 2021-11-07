@@ -1,30 +1,30 @@
 package main
 
-import (
-	"fmt"
-	"sync"
-)
+import "fmt"
 
-func goroutine(s string, wg *sync.WaitGroup) {
-	defer wg.Done() // goroutineの終了の宣言
-	for i := 0; i < 5; i++ {
-		fmt.Println(s)
+func goroutine1(s []int, c chan int) {
+	sum := 0
+	for _, v := range s {
+		sum += v
 	}
+	c <- sum
 }
 
-func normal(s string) {
-	for i := 0; i < 5; i++ {
-		fmt.Println(s)
+func goroutine2(s []int, c chan int) {
+	sum := 0
+	for _, v := range s {
+		sum += v
 	}
+	c <- sum
 }
 
 func main() {
-	// sync.WaitGroup ... goroutineの制御に使用する
-	var wg sync.WaitGroup
-	defer wg.Wait() // goroutine待機の宣言
-
-	wg.Add(1)                  // goroutine追加
-	go goroutine("world", &wg) // goroutine実行
-
-	normal("hello")
+	s := []int{1, 2, 3, 4, 5}
+	c := make(chan int)
+	go goroutine1(s, c)
+	go goroutine2(s, c)
+	x := <-c // ブロッキングされてgoroutine1が終わるまで進まない
+	fmt.Println(x)
+	y := <-c // ブロッキングされてgoroutine2が終わるまで進まない
+	fmt.Println(y)
 }
