@@ -2,40 +2,33 @@ package main
 
 import "fmt"
 
-type Human interface {
-	Say() string
-}
+func do(i interface{}) {
+	// intやstringをinterfaceで受け取る
 
-type Person struct {
-	Name string
-}
+	//ii := i.(int) // タイプアサーション
+	//ii *= 2
+	//fmt.Println(ii)
 
-type Dog struct {
-	Name string
-}
+	//ss := i.(string) // タイプアサーション
+	//fmt.Println(ss)
 
-func (p *Person) Say() string {
-	p.Name = "Mr." + p.Name
-	fmt.Println(p.Name)
-	return p.Name
-}
-
-func DriveCar(human Human) {
-	// 渡されたhumanにはSayメソッドがなければならない
-	if human.Say() == "Mr.Mike" {
-		fmt.Println("Run")
-	} else {
-		fmt.Println("Get out")
+	// switch type 文
+	switch v := i.(type) {
+	case int:
+		fmt.Println(v * 2)
+	case string:
+		fmt.Println(v + "!")
+	default:
+		fmt.Printf("I don't know %T\n", v)
 	}
 }
 
 func main() {
-	var mike Human = &Person{"Mike"}
-	var x Human = &Person{"x"}
-	DriveCar(mike)
-	DriveCar(x)
+	do(10)
+	do("Mike")
+	do(true)
 
-	// これはエラー
-	// var dog Dog = Dog("dog")
-	// DriveCar(dog)
+	var i = 10
+	ii := float64(10)
+	fmt.Println(i, ii)
 }
