@@ -2,35 +2,22 @@ package main
 
 import "fmt"
 
-func incrementGenerator() func() int {
-	x := 0
-	return func() int {
-		x++
-		return x
-	}
-}
-
-func circleArea(pi float64) func(radius float64) float64 {
-	return func(radius float64) float64 {
-		return pi * radius * radius
-	}
+func foo(params ...int) {
+	fmt.Println(len(params), params)
 }
 
 func main() {
-	counter := incrementGenerator()
-	fmt.Println(counter())
-	fmt.Println(counter())
-	fmt.Println(counter())
-	fmt.Println(counter())
+	foo()
+	foo(10, 20)
+	foo(10, 20, 30)
+	// 0 []
+	// 2 [10 20]
+	// 3 [10 20 30]
 
-	// スコープを制限できる
-	c1 := circleArea(3.14)
-	fmt.Println(c1(2))
-	fmt.Println(c1(3))
-	fmt.Println(c1(4))
+	s := []int{1, 2, 3}
+	fmt.Println(s)
+	// [1 2 3]
 
-	c2 := circleArea(3)
-	fmt.Println(c2(2))
-	fmt.Println(c2(3))
-	fmt.Println(c2(4))
+	foo(s...)
+	// 3 [1 2 3]
 }
