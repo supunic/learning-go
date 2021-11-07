@@ -3,28 +3,26 @@ package main
 import "fmt"
 
 type Vertex struct {
-	X, Y int
+	x, y int
 }
 
 func (v Vertex) Area() int {
 	// Vertex ... メソッドの値レシーバ
-	return v.X * v.Y
+	return v.x * v.y
 }
 
 func (v *Vertex) Scale(i int) {
 	// *Vertex ... メソッドのポインタレシーバ
-	v.X = v.X * i
-	v.Y = v.Y * i
+	v.x = v.x * i
+	v.y = v.y * i
 }
 
-func Area(v Vertex) int {
-	// ただの関数
-	return v.X * v.Y
+func New(x, y int) *Vertex {
+	return &Vertex{x, y}
 }
 
 func main() {
-	v := Vertex{3, 4}
-	//fmt.Println(Area(v))
+	v := New(3, 4)
 	v.Scale(10)
-	fmt.Println(v.Area()) // method
+	fmt.Println(v.Area())
 }
