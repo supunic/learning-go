@@ -7,22 +7,36 @@ type Vertex struct {
 }
 
 func (v Vertex) Area() int {
-	// Vertex ... メソッドの値レシーバ
 	return v.x * v.y
 }
 
 func (v *Vertex) Scale(i int) {
-	// *Vertex ... メソッドのポインタレシーバ
 	v.x = v.x * i
 	v.y = v.y * i
 }
 
-func New(x, y int) *Vertex {
-	return &Vertex{x, y}
+type Vertex3D struct {
+	Vertex // embedded
+	z      int
+}
+
+func (v Vertex3D) Area3D() int {
+	return v.x * v.y * v.z
+}
+
+func (v *Vertex3D) Scale3D(i int) {
+	v.x = v.x * i
+	v.y = v.y * i
+	v.z = v.z * i
+}
+
+func New(x, y, z int) *Vertex3D {
+	return &Vertex3D{Vertex{x, y}, z}
 }
 
 func main() {
-	v := New(3, 4)
+	v := New(3, 4, 5)
 	v.Scale(10)
 	fmt.Println(v.Area())
+	fmt.Println(v.Area3D())
 }
