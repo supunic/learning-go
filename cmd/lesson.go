@@ -2,41 +2,33 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"log"
 	"os"
 )
 
-func foo() {
-	defer fmt.Println("world foo")
-	fmt.Println("hello foo")
+func LoggingSettings(logFile string) {
+	logfile, _ := os.OpenFile(logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	multiLogFile := io.MultiWriter(os.Stdout, logfile)
+	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+	log.SetOutput(multiLogFile)
 }
 
 func main() {
-	// 遅延実行 -> main関数が終了した後に実行される
-	/*
-		defer fmt.Println("world")
-		foo()
-		fmt.Println("hello")
-		// hello
-		// world
-	*/
+	// doc
+	// https://pkg.go.dev/log
 
-	/*
-		// stacking defer
-		fmt.Println("run")
-		defer fmt.Println(1)
-		defer fmt.Println(2)
-		defer fmt.Println(3)
-		fmt.Println("success")
-		// run
-		// success
-		// 3
-		// 2
-		// 1
-	*/
+	LoggingSettings("test.log")
+	_, err := os.Open("fafafa")
+	if err != nil {
+		log.Fatalln("Exit", err) // プログラム終了
+	}
 
-	file, _ := os.Open("./lesson.go")
-	defer file.Close()        // deferで忘れずにfileをclose
-	data := make([]byte, 100) // バイト配列
-	file.Read(data)           // バイト配列にデータを入れる
-	fmt.Println(string(data)) // stringにcast
+	log.Println("logging!")
+	log.Printf("%T %v", "test", "test")
+
+	log.Fatalf("%T %v", "test", "test")
+	log.Fatalln("error!!") // プログラム終了
+
+	fmt.Println("ok!")
 }
