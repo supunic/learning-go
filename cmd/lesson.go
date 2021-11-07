@@ -5,33 +5,26 @@ import (
 	"time"
 )
 
-func goroutine1(ch chan string) {
-	for {
-		ch <- "packet from 1"
-		time.Sleep(1 * time.Second)
-	}
-}
-
-func goroutine2(ch chan int) {
-	for {
-		ch <- 100
-		time.Sleep(2 * time.Second)
-	}
-}
-
 func main() {
-	c1 := make(chan string)
-	c2 := make(chan int)
+	// 100 milli secごとにchanを返す
+	tick := time.Tick(100 * time.Millisecond)
+	// 500 milli sec後にchanを返す
+	boom := time.After(500 * time.Millisecond)
 
-	go goroutine1(c1)
-	go goroutine2(c2)
-
+OuterLoop:
 	for {
 		select {
-		case msg1 := <-c1:
-			fmt.Println(msg1)
-		case msg2 := <-c2:
-			fmt.Println(msg2)
+		case <-tick: // time.Tickの戻り値chanを受信
+			fmt.Println("tick.")
+		case <-boom: // time.Afterの戻り値chanを受信
+			fmt.Println("BOOM!")
+			break OuterLoop
+		default:
+			// tickもboomもchに入ってなかったときにforが回ってきた場合
+			// 50 milli sec 待ってまたforが始まる
+			fmt.Println("    .")
+			time.Sleep(50 * time.Millisecond)
 		}
 	}
+	fmt.Println("OuterLoop broken")
 }
