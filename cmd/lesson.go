@@ -23,6 +23,7 @@ func main() {
 	fmt.Println(counter())
 	fmt.Println(counter())
 
+	// スコープを制限できる
 	c1 := circleArea(3.14)
 	fmt.Println(c1(2))
 	fmt.Println(c1(3))
