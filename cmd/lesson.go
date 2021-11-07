@@ -2,21 +2,33 @@ package main
 
 import "fmt"
 
-func one(x *int) {
-	// ポインタxの中身に1を入れている
-	*x = 1
-}
-
 func main() {
-	// ポインタ
+	s := make([]int, 0)
+	fmt.Printf("%T %v\n", s, s)
 
-	var n = 100
-	one(&n)
-	fmt.Println(n) // 値の表示
+	m := make(map[string]int)
+	fmt.Printf("%T %v\n", m, m)
 
-	fmt.Println(&n) // 値を入れたメモリのアドレスを表示
+	var p = new(int) // メモリの領域を確保する
+	fmt.Printf("%T %v\n", p, p)
 
-	var p = &n // *int intのポインタ型
-	fmt.Println(p)
-	fmt.Println(*p) // ポインタの中身を表示
+	fmt.Println(p)  // 0xc000018100
+	fmt.Println(*p) // 0
+	*p++
+	fmt.Println(*p) // 1
+
+	ch := make(chan int)
+	fmt.Printf("%T\n%v\n", ch, ch)
+
+	st := new(struct{})
+	fmt.Printf("%T\n%v\n", st, st)
+
+	// makeもnewもメモリの領域を確保する
+	// make -> 値を返す
+	// new -> ポインタを返す
+
+	/*
+		var p2 *int
+		fmt.Println(p2) // <nil>
+	*/
 }
