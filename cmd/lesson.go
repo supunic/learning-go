@@ -2,16 +2,32 @@ package main
 
 import "fmt"
 
-func main() {
-	b := []byte{72, 73}
-	fmt.Println(b)
-	// -> [72 73]
-	fmt.Println(string(b))
-	// -> HI
+func add(x, y int) (int, int) {
+	return x + y, x - y
+}
 
-	c := []byte("HI")
-	fmt.Println(c)
-	// -> [72 73]
-	fmt.Println(string(c))
-	// -> HI
+func calc(price, item int) (result int) {
+	result = price * item
+	return
+}
+
+func convert(price int) float64 {
+	return float64(price)
+}
+
+func main() {
+	r1, r2 := add(10, 20)
+	fmt.Println(r1, r2)
+
+	r3 := calc(100, 2)
+	fmt.Println(r3)
+
+	f := func(x int) {
+		fmt.Println("inner func", x)
+	}
+	f(1)
+
+	func(x int) {
+		fmt.Println("inner func2", x)
+	}(1)
 }
