@@ -1,9 +1,9 @@
 version: '3'
 services: 
-  go-app:
+  learning-go:
     build:
       context: .
-      dockerfile: ./build/Dockerfile
+      dockerfile: Dockerfile
     tty: true
     volumes:
-      - ./cmd:/go/src/app
+      - ./app:/go/src/app
