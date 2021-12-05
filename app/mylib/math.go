@@ -1,3 +1,4 @@
+// Package mylib is my special lib.
 package mylib
 
 // Average returns the average of a series of numbers
