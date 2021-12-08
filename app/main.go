@@ -1,27 +1,21 @@
 package main
 
-import (
-	"fmt"
-	"sort"
+import "fmt"
+
+const (
+	c1 = iota
+	c2
+	c3
+)
+
+const (
+	_      = iota
+	KB int = 1 << (10 * iota) // 1024
+	MB                        // 1048576
+	GB                        // 1073741824
 )
 
 func main() {
-	i := []int{5, 3, 2, 8, 7}
-	s := []string{"d", "a", "f"}
-	p := []struct {
-		Name string
-		Age  int
-	}{
-		{"Nancy", 20},
-		{"Vera", 40},
-		{"Mike", 30},
-		{"Bob", 50},
-	}
-	fmt.Println(i, s, p)
-	sort.Ints(i)
-	fmt.Println(i)
-	sort.Strings(s)
-	fmt.Println(s)
-	sort.Slice(p, func(i, j int) bool { return p[i].Name < p[j].Name })
-	fmt.Println(p)
+	fmt.Println(c1, c2, c3)
+	fmt.Println(KB, MB, GB)
 }
