@@ -1,24 +1,37 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"io/ioutil"
-	"log"
+	"net/http"
+	"net/url"
 )
 
 func main() {
-	content, err := ioutil.ReadFile("main.go")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	fmt.Println(string(content))
+	//resp, _ := http.Get("http://example.com")
+	//defer func(Body io.ReadCloser) {
+	//	err := Body.Close()
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//}(resp.Body)
+	//body, _ := ioutil.ReadAll(resp.Body)
+	//fmt.Println(string(body))
 
-	if err := ioutil.WriteFile("ioutil_temp.go", content, 0666); err != nil {
-		log.Fatalln(err)
-	}
+	base, _ := url.Parse("http://example.com")
+	reference, _ := url.Parse("/test?a=1&b=2")
+	endpoint := base.ResolveReference(reference).String()
+	fmt.Println(endpoint)
+	req, _ := http.NewRequest("GET", endpoint, nil)
+	req.Header.Add("If-None-Match", `W/"wyzzy"`)
+	q := req.URL.Query()
+	q.Add("c", "3&%")
+	fmt.Println(q)
+	fmt.Println(q.Encode())
+	req.URL.RawQuery = q.Encode()
 
-	r := bytes.NewBuffer([]byte("abc"))
-	content2, _ := ioutil.ReadAll(r)
-	fmt.Println(string(content2))
+	var client *http.Client = &http.Client{}
+	resp, _ := client.Do(req)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(body))
 }
