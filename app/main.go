@@ -1,21 +1,36 @@
 package main
 
-import "fmt"
-
-const (
-	c1 = iota
-	c2
-	c3
+import (
+	"context"
+	"fmt"
+	"time"
 )
 
-const (
-	_      = iota
-	KB int = 1 << (10 * iota) // 1024
-	MB                        // 1048576
-	GB                        // 1073741824
-)
+func longProcess(ctx context.Context, ch chan string) {
+	fmt.Println("run")
+	time.Sleep(2 * time.Second)
+	fmt.Println("finish")
+	ch <- "result"
+}
 
 func main() {
-	fmt.Println(c1, c2, c3)
-	fmt.Println(KB, MB, GB)
+	ch := make(chan string)
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+	// ctxは引数に渡すだけでいい
+	go longProcess(ctx, ch)
+
+CTXLOOP:
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Println(ctx.Err())
+			break CTXLOOP
+		case <-ch:
+			fmt.Println("success")
+			break CTXLOOP
+		}
+	}
+	fmt.Println("#############")
 }
