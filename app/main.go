@@ -1,37 +1,51 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/url"
 )
 
+type T struct{}
+
+type Person struct {
+	Name      string   `json:"name"`
+	Age       int      `json:"age,string"`
+	Nicknames []string `json:"nicknames,omitempty"`
+	T         *T       `json:"T,omitempty"`
+}
+
+// UnmarshalJSON 指定したstructに対してjson.Unmarshalしたときに使われる
+func (p *Person) UnmarshalJSON(b []byte) error {
+	type Person2 struct {
+		Name string
+	}
+	var p2 Person2
+	err := json.Unmarshal(b, &p2)
+	if err != nil {
+		fmt.Println(err)
+	}
+	p.Name = p2.Name + "!"
+	return err
+}
+
+// MarshalJSON 指定したstructに対してjson.Marshalしたときに使われる
+func (p Person) MarshalJSON() ([]byte, error) {
+	v, err := json.Marshal(&struct {
+		Name string
+	}{
+		Name: "Mr." + p.Name,
+	})
+	return v, err
+}
+
 func main() {
-	//resp, _ := http.Get("http://example.com")
-	//defer func(Body io.ReadCloser) {
-	//	err := Body.Close()
-	//	if err != nil {
-	//		fmt.Println(err)
-	//	}
-	//}(resp.Body)
-	//body, _ := ioutil.ReadAll(resp.Body)
-	//fmt.Println(string(body))
+	b := []byte(`{"name": "mike", "age": "20", "nicknames": ["a", "b", "c"]}`)
+	var p Person
+	if err := json.Unmarshal(b, &p); err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(p.Name, p.Age, p.Nicknames)
 
-	base, _ := url.Parse("http://example.com")
-	reference, _ := url.Parse("/test?a=1&b=2")
-	endpoint := base.ResolveReference(reference).String()
-	fmt.Println(endpoint)
-	req, _ := http.NewRequest("GET", endpoint, nil)
-	req.Header.Add("If-None-Match", `W/"wyzzy"`)
-	q := req.URL.Query()
-	q.Add("c", "3&%")
-	fmt.Println(q)
-	fmt.Println(q.Encode())
-	req.URL.RawQuery = q.Encode()
-
-	var client *http.Client = &http.Client{}
-	resp, _ := client.Do(req)
-	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println(string(body))
+	v, _ := json.Marshal(p)
+	fmt.Println(string(v))
 }
