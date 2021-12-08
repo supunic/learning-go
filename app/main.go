@@ -1,37 +1,29 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"golang.org/x/sync/semaphore"
-	"time"
+	"gopkg.in/ini.v1"
 )
 
-var s = semaphore.NewWeighted(1)
+type ConfigList struct {
+	Port      int
+	DbName    string
+	SQLDriver string
+}
 
-func longProcess(ctx context.Context) {
-	// TryAcquire ... 他のgoroutineを待たずに終了
-	if isAcquire := s.TryAcquire(1); !isAcquire {
-		fmt.Println("Could not get lock.")
-		return
+var Config ConfigList
+
+func init() {
+	cfg, _ := ini.Load("config.ini")
+	Config = ConfigList{
+		Port:      cfg.Section("web").Key("port").MustInt(),
+		DbName:    cfg.Section("db").Key("name").MustString("example.sql"),
+		SQLDriver: cfg.Section("db").Key("driver").String(),
 	}
-	// Acquire ... 他のgoroutineを待ってから実行
-	//if err := s.Acquire(ctx, 1); err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
-	defer s.Release(1)
-	fmt.Println("Wait...")
-	time.Sleep(1 * time.Second)
-	fmt.Println("Done")
 }
 
 func main() {
-	ctx := context.TODO()
-	go longProcess(ctx)
-	go longProcess(ctx)
-	go longProcess(ctx)
-	time.Sleep(2 * time.Second)
-	go longProcess(ctx)
-	time.Sleep(5 * time.Second)
+	fmt.Printf("%T %v\n", Config.Port, Config.Port)
+	fmt.Printf("%T %v\n", Config.DbName, Config.DbName)
+	fmt.Printf("%T %v\n", Config.SQLDriver, Config.SQLDriver)
 }

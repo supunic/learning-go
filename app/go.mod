@@ -2,4 +2,7 @@ module app
 
 go 1.17
 
-require golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+require (
+	github.com/stretchr/testify v1.7.0 // indirect
+	gopkg.in/ini.v1 v1.66.2
+)
