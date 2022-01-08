@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -28,12 +29,16 @@ func loadPage(title string) (*Page, error) {
 }
 
 // templates htmlファイルをキャッシュする
-var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var templates = template.Must(template.ParseFiles("edit.html", "view.html", "index.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	if err := templates.ExecuteTemplate(w, tmpl+".html", p); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func indexHandler(w http.ResponseWriter, _ *http.Request) {
+	renderTemplate(w, "index", &Page{Title: "Hello, World!", Body: []byte("This is root.")})
 }
 
 func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
@@ -47,7 +52,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
 	renderTemplate(w, "view", p)
 }
 
-func editHandler(w http.ResponseWriter, r *http.Request, title string) {
+func editHandler(w http.ResponseWriter, _ *http.Request, title string) {
 	p, err := loadPage(title)
 	if err != nil {
 		p = &Page{Title: title}
@@ -80,8 +85,10 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 }
 
 func main() {
+	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	fmt.Println("http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
