@@ -5,3 +5,5 @@ RUN apk add --update && apk add git gcc g++ sqlite
 RUN mkdir -p /go/src/app
 
 WORKDIR /go/src/app
+
+ADD ./app /go/src/app
